@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROJECT_NAME=ghostty-macos-keybindings
-PROJECT_REPOSITORY=TBarregren/ghostty-macos-keybindings
+PROJECT_REPOSITORY=Kntnt/ghostty-macos-keybindings
 PROJECT_SOURCE_REF=${GHOSTTY_MACOS_KEYBINDINGS_REF:-main}
 BLESH_ARCHIVE_NAME=ble-nightly-20260711+d69e4d5.tar.xz
 BLESH_ARCHIVE_URL=https://github.com/akinomyoga/ble.sh/releases/download/nightly/ble-nightly-20260711%2Bd69e4d5.tar.xz

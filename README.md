@@ -1,6 +1,6 @@
 # Fix Ghostty Shift+Arrow Selection in Bash on macOS
 
-[![test](https://github.com/TBarregren/ghostty-macos-keybindings/actions/workflows/test.yml/badge.svg)](https://github.com/TBarregren/ghostty-macos-keybindings/actions/workflows/test.yml)
+[![test](https://github.com/Kntnt/ghostty-macos-keybindings/actions/workflows/test.yml/badge.svg)](https://github.com/Kntnt/ghostty-macos-keybindings/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Make the Ghostty terminal command line behave like a macOS text field when you use Bash. This project fixes the problem where **Shift+Left Arrow prints `D`**, **Shift+Right Arrow prints `C`**, or Shift+Arrow moves the cursor without selecting text. It also adds familiar Command and Option keyboard shortcuts for selecting, copying, cutting, pasting, moving, deleting, undoing, and redoing text.
@@ -27,7 +27,7 @@ Requirements:
 Run the installer:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/TBarregren/ghostty-macos-keybindings/main/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Kntnt/ghostty-macos-keybindings/main/install.sh)"
 ```
 
 Then reload Ghostty with <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>,</kbd> and restart the current Bash session:
@@ -39,7 +39,7 @@ exec bash -l
 You can instead inspect the code before running it:
 
 ```bash
-git clone https://github.com/TBarregren/ghostty-macos-keybindings.git
+git clone https://github.com/Kntnt/ghostty-macos-keybindings.git
 cd ghostty-macos-keybindings
 ./install.sh
 ```
@@ -140,7 +140,7 @@ From a clone of the repository:
 Or run the standalone uninstaller:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/TBarregren/ghostty-macos-keybindings/main/uninstall.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Kntnt/ghostty-macos-keybindings/main/uninstall.sh)"
 ```
 
 The uninstaller removes only this project's marked blocks, configuration fragment, and private ble.sh installation. Backups are retained.
