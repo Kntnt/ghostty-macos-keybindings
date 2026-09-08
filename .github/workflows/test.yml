@@ -16,4 +16,6 @@ jobs:
       - name: Check script syntax
         run: ./tests/test-syntax.sh
       - name: Test install, reinstall, and uninstall
+        env:
+          GHOSTTY_MACOS_KEYBINDINGS_SKIP_PTY_TEST: 1
         run: ./tests/test-install.sh

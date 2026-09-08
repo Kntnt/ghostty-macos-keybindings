@@ -60,7 +60,9 @@ assert_count 1 'font-size = 14' "$HOME/.config/ghostty/config.ghostty"
 [ -r "$XDG_CONFIG_HOME/ghostty-macos-keybindings/blesh-macos-bindings.bash" ]
 [ -r "$XDG_CONFIG_HOME/ghostty/ghostty-macos-keybindings.conf" ]
 
-if [ -x /usr/bin/expect ]; then
+if [ "${GHOSTTY_MACOS_KEYBINDINGS_SKIP_PTY_TEST:-0}" = 1 ]; then
+    printf 'PTY behavior test skipped: hosted CI does not provide a terminal emulator\n'
+elif [ -x /usr/bin/expect ]; then
     TEST_BASHRC=$HOME/.bashrc /usr/bin/expect "$PROJECT_ROOT/tests/test-keybindings.exp"
 fi
 

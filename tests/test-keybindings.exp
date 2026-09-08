@@ -12,7 +12,6 @@ proc wait_for {text} {
         -exact $text { return }
         timeout {
             puts stderr "timed out waiting for: $text"
-            puts stderr "last terminal output: $expect_out(buffer)"
             exit 1
         }
         eof {
