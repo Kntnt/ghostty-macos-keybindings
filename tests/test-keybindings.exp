@@ -12,6 +12,7 @@ proc wait_for {text} {
         -exact $text { return }
         timeout {
             puts stderr "timed out waiting for: $text"
+            puts stderr "last terminal output: $expect_out(buffer)"
             exit 1
         }
         eof {
@@ -26,6 +27,7 @@ set env(HISTFILE) /dev/null
 # decoder is terminal-independent, so use the universally available entry.
 set env(TERM) xterm-256color
 set env(PS1) "GMK-TEST> "
+set stty_init "rows 24 columns 80"
 spawn /bin/bash --noprofile --rcfile $env(TEST_BASHRC) -i
 
 # Wait until ble.sh has finished terminal detection and is actually reading a
