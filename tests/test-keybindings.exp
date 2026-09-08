@@ -22,7 +22,9 @@ proc wait_for {text} {
 }
 
 set env(HISTFILE) /dev/null
-set env(TERM) xterm-ghostty
+# GitHub's macOS image does not install Ghostty's terminfo entry. The key
+# decoder is terminal-independent, so use the universally available entry.
+set env(TERM) xterm-256color
 set env(PS1) "GMK-TEST> "
 spawn /bin/bash --noprofile --rcfile $env(TEST_BASHRC) -i
 
