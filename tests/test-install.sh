@@ -7,7 +7,10 @@ trap 'rm -rf "$TEST_ROOT"' EXIT HUP INT TERM
 
 TEST_HOME=$TEST_ROOT/home
 TEST_BIN=$TEST_ROOT/bin
+TEST_COMPLETION_DIR=$TEST_ROOT/completion
 mkdir -p "$TEST_HOME/.config/ghostty" "$TEST_BIN"
+mkdir -p "$TEST_COMPLETION_DIR"
+touch "$TEST_COMPLETION_DIR/alpha" "$TEST_COMPLETION_DIR/beta"
 
 cat > "$TEST_HOME/.bashrc" <<'EOF'
 # existing bashrc content
@@ -63,7 +66,9 @@ assert_count 1 'font-size = 14' "$HOME/.config/ghostty/config.ghostty"
 if [ "${GHOSTTY_MACOS_KEYBINDINGS_SKIP_PTY_TEST:-0}" = 1 ]; then
     printf 'PTY behavior test skipped: hosted CI does not provide a terminal emulator\n'
 elif [ -x /usr/bin/expect ]; then
-    TEST_BASHRC=$HOME/.bashrc /usr/bin/expect "$PROJECT_ROOT/tests/test-keybindings.exp"
+    TEST_BASHRC=$HOME/.bashrc \
+        TEST_COMPLETION_DIR=$TEST_COMPLETION_DIR \
+        /usr/bin/expect "$PROJECT_ROOT/tests/test-keybindings.exp"
 fi
 
 "$PROJECT_ROOT/uninstall.sh"

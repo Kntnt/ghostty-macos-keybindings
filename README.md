@@ -77,7 +77,7 @@ Ghostty encodes modified cursor keys as terminal escape sequences. Shift+Left co
 
 GNU Readline, Bash's usual command-line editor, does not provide a complete selection-aware widget for these sequences. With no suitable binding, part of the escape sequence may be consumed while its final `D` or `C` is inserted as ordinary text. Simple `.inputrc` macros can move the cursor and set a mark, but repeated Shift+Arrow presses tend to reset the selection anchor. That does not behave like selection in a normal macOS text field.
 
-This project uses [ble.sh](https://github.com/akinomyoga/ble.sh), a Bash line editor with a real selection state. A small Ghostty configuration fragment lets the relevant Command shortcuts reach ble.sh. The included ble.sh profile disables syntax highlighting, automatic suggestions, completion menus, and status decorations so the result remains close to normal GNU Readline.
+This project uses [ble.sh](https://github.com/akinomyoga/ble.sh), a Bash line editor with a real selection state. A small Ghostty configuration fragment lets the relevant Command shortcuts reach ble.sh. The included ble.sh profile disables syntax highlighting, automatic suggestions, completion menus, completion candidate coloring, and status decorations so the result remains close to normal GNU Readline.
 
 ## What the installer changes
 

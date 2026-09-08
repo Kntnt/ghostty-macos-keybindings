@@ -6,6 +6,10 @@ if {![info exists env(TEST_BASHRC)]} {
     puts stderr "TEST_BASHRC is required"
     exit 1
 }
+if {![info exists env(TEST_COMPLETION_DIR)]} {
+    puts stderr "TEST_COMPLETION_DIR is required"
+    exit 1
+}
 
 proc wait_for {text} {
     expect {
@@ -32,6 +36,53 @@ spawn /bin/bash --noprofile --rcfile $env(TEST_BASHRC) -i
 # Wait until ble.sh has finished terminal detection and is actually reading a
 # command. Fixed sleeps are unreliable on slower CI runners.
 wait_for "GMK-TEST> "
+
+# Readline-style completion lists are plain text. ble.sh's filename faces use
+# SGR 4 by default, so catch the exact underline sequence seen by users.
+send -- {printf "<COMPLETION-COLOR:%s,%s>\n" "$bleopt_complete_menu_color" "$bleopt_complete_menu_color_match"}
+send -- "\r"
+expect {
+    -re {<COMPLETION-COLOR:([^,]*),([^>]*)>} {
+        if {$expect_out(1,string) ne "" || $expect_out(2,string) ne ""} {
+            puts stderr "completion candidate coloring is enabled"
+            exit 1
+        }
+    }
+    timeout {
+        puts stderr "timed out reading completion color options"
+        exit 1
+    }
+    eof {
+        puts stderr "interactive Bash exited during completion color check"
+        exit 1
+    }
+}
+wait_for "GMK-TEST> "
+send -- "cd -- $env(TEST_COMPLETION_DIR)\r"
+wait_for "GMK-TEST> "
+send -- "cat "
+after 100
+send -- "\t"
+after 100
+send -- "\t"
+after 500
+send -- "\003"
+expect {
+    -exact "GMK-TEST> " { set completion_output $expect_out(buffer) }
+    timeout {
+        puts stderr "timed out waiting for prompt after completion"
+        exit 1
+    }
+    eof {
+        puts stderr "interactive Bash exited during completion test"
+        exit 1
+    }
+}
+set underline_sgr [binary format H* 1b5b303b34]
+if {[string first $underline_sgr $completion_output] >= 0} {
+    puts stderr "completion candidates are underlined"
+    exit 1
+}
 
 # Shift+Left twice must retain one selection anchor. Backspace then removes CD.
 send -- "printf '<SHIFT:%s>\\n' ABCD\033\[1;2D\033\[1;2D"

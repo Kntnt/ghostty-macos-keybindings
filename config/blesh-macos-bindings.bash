@@ -6,6 +6,11 @@
 # suggestions, completion menus, or prompt/status decorations.
 ble-import -d config/readline
 
+# config/readline changes Readline's colored-stats variables, but ble.sh's
+# renderer also needs its own completion-color options disabled explicitly.
+bleopt complete_menu_color=
+bleopt complete_menu_color_match=
+
 function ble/widget/ghostty-macos/select-all {
     local length=${#_ble_edit_str}
     ((length)) || { ble/widget/.bell 'empty command line'; return 1; }
