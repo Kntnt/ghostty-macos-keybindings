@@ -1,0 +1,19 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check script syntax
+        run: ./tests/test-syntax.sh
+      - name: Test install, reinstall, and uninstall
+        run: ./tests/test-install.sh

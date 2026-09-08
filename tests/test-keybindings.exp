@@ -1,0 +1,63 @@
+#!/usr/bin/expect -f
+set timeout 10
+log_user 0
+
+if {![info exists env(TEST_BASHRC)]} {
+    puts stderr "TEST_BASHRC is required"
+    exit 1
+}
+
+proc wait_for {text} {
+    expect {
+        -exact $text { return }
+        timeout {
+            puts stderr "timed out waiting for: $text"
+            exit 1
+        }
+        eof {
+            puts stderr "interactive Bash exited while waiting for: $text"
+            exit 1
+        }
+    }
+}
+
+set env(HISTFILE) /dev/null
+set env(TERM) xterm-ghostty
+set env(PS1) "GMK-TEST> "
+spawn /bin/bash --noprofile --rcfile $env(TEST_BASHRC) -i
+
+# ble.sh asks real terminal emulators a few capability questions. A bare PTY
+# does not answer them, so allow its short detection timeout to finish.
+after 1200
+send -- "\003"
+after 200
+
+# Shift+Left twice must retain one selection anchor. Backspace then removes CD.
+send -- "printf '<SHIFT:%s>\\n' ABCD\033\[1;2D\033\[1;2D"
+send -- "\177\r"
+wait_for "<SHIFT:AB>"
+
+# Kitty CSI-u encoding for Command+A, followed by Backspace.
+send -- "discard this\033\[97;9u"
+send -- "\177printf '<COMMAND-A>\\n'\r"
+wait_for "<COMMAND-A>"
+
+# The normal macOS Option+Backspace sequence removes the previous word.
+send -- "printf '<OPTION:%s>\\n' one two\033\177\r"
+wait_for "<OPTION:one>"
+
+# Option+Shift+Left selects OLD; bracketed paste must replace the selection.
+send -- "printf '<PASTE:%s>\\n' OLD\033\[1;4D\033\[200~NEW\033\[201~\r"
+wait_for "<PASTE:NEW>"
+
+# Command+Z removes the inserted command, and Command+Shift+Z restores it.
+send -- "printf '<REDO>\\n'"
+after 100
+send -- "\033\[122;9u"
+after 100
+send -- "\033\[122;10u\r"
+wait_for "<REDO>"
+
+send -- "exit\r"
+expect eof
+puts "keybinding behavior test passed"
